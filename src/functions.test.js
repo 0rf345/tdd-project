@@ -2,18 +2,33 @@ import { add } from './functions';
 import { ronSwanson } from './functions';
 import axios from 'axios';
 
-jest.mock('axios');
+// Mocking axios
+jest.mock('axios', () => ({
+  get: jest.fn()
+    .mockReturnValue(Promise.resolve({ 
+      data: Array('Quote')
+    }))
+    .mockReturnValueOnce(Promise.reject({ 
+      response: {
+        status: 404,
+        data: Array('Quote')
+      }
+    }))
+}))
 
 describe('Ron Swanson Quotes', () => {
-  let mockAxios = jest.fn();
-  //mockAxios.get.mockImplementation((url) => Promise.resolve({ data: Array('Query')}));
 
-  axios.get.mockImplementation((url) => Promise.resolve({ data: Array('Quote')}));
+  it('handles malformed response', () => {
+    ronSwanson(axios)
+      .then(err => {
+        expect(err).toBe('Server Error')
+      })
+  })
 
   it('uses correct url', () => {
     ronSwanson(axios)
       .then(res => {
-        expect(axios.get.toBeCalledWith('https://ron-swanson-quotes.herokuapp.com/v2/quotes'));
+        expect(axios.get).toBeCalledWith('https://ron-swanson-quotes.herokuapp.com/v2/quotes');
       })
   })
 
@@ -23,6 +38,7 @@ describe('Ron Swanson Quotes', () => {
         expect(res[0]).toBe('Quote');
       })
   })
+
 })
 
 describe('Add function', () => {
