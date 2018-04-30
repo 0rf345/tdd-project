@@ -1,9 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import App from './App';
+import TestComp from './App';
+import { shallow } from 'enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
+Enzyme.configure({ adapter: new Adapter() });
+
+let createProps = (props) => ({
+  message: 'default message',
+  ...props
+});
+
+describe('Test Component', () => {
+  let wrapper;
+  let props;
+  it('will probably contain something in the future');
 });
